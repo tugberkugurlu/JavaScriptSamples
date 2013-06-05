@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <ul data-bind="foreach: { data: items }">
+        <li style="padding: 5px; background-color: gray;" data-bind="glow: glow">
+            <div>
+                <span data-bind="text: item"></span>: <input type="text" data-bind="value: item" />
+            </div>
+        </li>
+    </ul>
+
+    <div>
+        <div>
+            <input type="text" data-bind="value: itemToAdd" />
+        </div>
+        <a href="#" data-bind="click: add">Add</a>
+    </div>
+
+    <script src="/Scripts/knockout-2.2.1.js"></script>
+    <script src="/Scripts/jquery-2.0.1.min.js"></script>
+    <script src="/Scripts/jquery.color-2.1.2.min.js"></script>
+    <script>
+        // ref: http://www.knockmeout.net/2011/07/another-look-at-custom-bindings-for.html
+        //      http://knockoutjs.com/documentation/custom-bindings.html
+        //      http://knockoutjs.com/examples/grid.html
+
+        (function () {
+
+            ko.bindingHandlers.myBinding = {
+                init: function (element, valueAccessor) {
+                    // This will be called when the binding is first applied to an element
+                    // Set up any initial state, event handlers, etc. here
+                },
+                update: function (element, valueAccessor) {
+                    // This will be called once when the binding is first applied to an element,
+                    // and again whenever the associated observable changes value.
+                    // Update the DOM element based on the supplied values here.
+                }
+            };
+
+            ko.bindingHandlers.flash = {
+                init: function (element, valueAccessor) {
+                    
+                },
+                update: function (element, valueAccessor) {
+
+                    // Notice that we try to unwrap the value passed to us, in case it is an observable, 
+                    // but we do not even keep track of the value. This is simply to create a dependency 
+                    // in our binding on that observable.
+
+                    var value = ko.utils.unwrapObservable(valueAccessor()); // unwrap to get subscription
+                    $(element).hide().fadeIn(500);
+                }
+            };
+
+            // ref: http://jsfiddle.net/JamesHill/EfjT5/
+            //      http://stackoverflow.com/questions/7696576/javascript-glow-pulsate-effect-to-stop-on-click
+            //      https://github.com/jquery/jquery-color
+            ko.bindingHandlers.glow = {
+
+                init: function (element, valueAccessor) {
+
+                    $(element).hover(function () {
+
+                        $(this).animate({ color: "black" }, 500, 'linear');
+                        $(this).stop();
+                    });
+                },
+
+                update: function (element, valueAccessor) {
+
+                    var shouldGlow = ko.utils.unwrapObservable(valueAccessor());
+                    if (shouldGlow === true) {
+
+                        var pulsate = function () {
+
+                            //$(element).animate({ opacity: 0.2 }, 500, 'linear')
+                            //          .animate({ opacity: 1 }, 500, 'linear', pulsate);
+
+                            $(element).animate({ color: "red" }, 500, 'linear', function () {
+                                $(element).animate({ color: "yellow" }, 500, 'linear', pulsate);
+                            });
+                        };
+
+                        pulsate();
+                    }
+                }
+            };
+
+        }());
+
+        (function () {
+
+            var vm = {
+
+                items: ko.observableArray([
+                    { item: ko.observable('foo'), glow: ko.observable(false) },
+                    { item: ko.observable('bar'), glow: ko.observable(false) },
+                    { item: ko.observable('fooBar'), glow: ko.observable(false) }
+                ]),
+                itemToAdd: ko.observable(),
+                add: function () {
+
+                    vm.items.push({ item: ko.observable(vm.itemToAdd()), glow: ko.observable(true) });
+                    vm.itemToAdd(null);
+                }
+            };
+            
+            ko.applyBindings(vm);
+        }());
+    </script>
+</body>
+</html>
