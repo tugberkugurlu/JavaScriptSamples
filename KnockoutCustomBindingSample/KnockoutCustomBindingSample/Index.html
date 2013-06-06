@@ -63,9 +63,10 @@
 
                 init: function (element, valueAccessor) {
 
+                    var initialColor = $.Color(element, 'color');
                     $(element).hover(function () {
 
-                        $(this).animate({ color: "black" }, 500, 'linear');
+                        $(this).animate({ color: initialColor }, 500, 'linear');
                         $(this).stop();
                     });
                 },
