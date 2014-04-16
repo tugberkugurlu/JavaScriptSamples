@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Upload</title>
+    
+</head>
+<body>
+    <div>
+        <ul>
+            <li><a class="clickable" data-foo="1" href="#">foo</a></li>
+            <li><a class="clickable" data-foo="2" href="#">foo</a></li>
+            <li><a class="clickable" data-foo="3" href="#">foo</a></li>
+            <li><a class="clickable" data-foo="4" href="#">foo</a></li>
+            <li><a class="clickable" data-foo="5" href="#">foo</a></li>
+        </ul>
+    </div>
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+    <script>
+        (function () {
+
+            // http://www.tinymce.com/wiki.php/Tutorials:Creating_custom_dialogs
+            // http://www.tinymce.com/wiki.php/api4:class.tinymce.WindowManager
+
+            $('.clickable').click(function (e) {
+
+                e.preventDefault();
+                var value = $(this).attr('data-foo');
+                top.tinymce.activeEditor.windowManager.setParams({ 'foo': value });
+            });
+
+            console.log(top.tinymce.activeEditor.windowManager);
+        }());
+    </script>
+</body>
+
+
+
+
+
+</html>
