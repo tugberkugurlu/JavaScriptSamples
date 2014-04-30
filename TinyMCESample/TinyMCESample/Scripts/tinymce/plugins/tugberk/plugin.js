@@ -43,6 +43,7 @@ tinymce.PluginManager.add('tugberk', function (editor, url) {
                             console.log(e);
                             console.log(editor.windowManager);
                             console.log(editor.windowManager.getParams());
+                            editor.insertContent(editor.windowManager.getParams()["foo"]);
                         }
                     }
                 ]
